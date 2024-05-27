@@ -8,6 +8,8 @@ import ChatMessageBubble from "@/components/ChatMessageBubble";
 import { UploadDocumentsForm } from "@/components/UploadDocumentsForm";
 import { IntermediateStep } from "./IntermediateStep";
 
+import { generateHash } from "@/functions";
+
 export function ChatWindow(props) {
   const messageContainerRef = useRef(null);
 
@@ -71,6 +73,13 @@ export function ChatWindow(props) {
       });
     },
   });
+
+  const welcomeMessage = {
+    id: "0",
+    content:
+      "Salut! Ma bucur să te cunosc. Sunt aici pentru a te ajuta cu nevoile tale veterinare. Poți să îmi spui mai multe despre animalul tău de companie? Începem cu specia - este un câine, o pisică, un iepure sau altceva?",
+    role: "assistant",
+  };
 
   async function sendMessage(e) {
     e.preventDefault();
@@ -146,20 +155,18 @@ export function ChatWindow(props) {
 
   return (
     <div
-      className={`flex flex-col items-center p-4 md:p-8 rounded grow overflow-hidden ${
-        messages.length > 0 ? "border" : ""
-      }`}
+      className={`flex flex-col items-center p-4 md:p-8 rounded grow overflow-hidden border`}
     >
-      <h2 className={`${messages.length > 0 ? "" : "hidden"} text-2xl`}>
+      <h2 className={`text-2xl`}>
         {emoji} {titleText}
       </h2>
-      {messages.length === 0 ? emptyStateComponent : ""}
       <div
-        className="flex flex-col-reverse w-full mb-4 overflow-auto transition-[flex-grow] ease-in-out"
+        className="flex flex-col-reverse w-full mb-4 overflow-auto transition-[flex-grow] ease-in-out h-screen"
         ref={messageContainerRef}
       >
         {messages.length > 0
           ? [...messages].reverse().map((m, i) => {
+              console.log(m);
               const sourceKey = (messages.length - 1 - i).toString();
               return m.role === "system" ? (
                 <IntermediateStep key={m.id} message={m}></IntermediateStep>
@@ -173,6 +180,7 @@ export function ChatWindow(props) {
               );
             })
           : ""}
+        <ChatMessageBubble key={generateHash()} message={welcomeMessage} />
       </div>
 
       {messages.length === 0 && ingestForm}

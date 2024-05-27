@@ -1,10 +1,11 @@
+import React from "react";
+
 const ChatMessageBubble = (props) => {
   const { message, aiEmoji, sources } = props;
 
   const colorClassName =
     message.role === "user" ? "bg-sky-600" : "bg-slate-50 text-black";
-  const alignmentClassName =
-    message.role === "user" ? "ml-auto" : "mr-auto";
+  const alignmentClassName = message.role === "user" ? "ml-auto" : "mr-auto";
 
   return (
     <div
@@ -40,6 +41,6 @@ const ChatMessageBubble = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default ChatMessageBubble;
