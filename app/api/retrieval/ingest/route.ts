@@ -39,12 +39,13 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_PRIVATE_KEY!,
     );
 
-    const splitter = RecursiveCharacterTextSplitter.fromLanguage("markdown", {
-      chunkSize: 256,
-      chunkOverlap: 20,
+    const splitter = RecursiveCharacterTextSplitter.fromLanguage("js", {
+      chunkSize: 1024, // Increased chunkSize
+      chunkOverlap: 100, // Increased chunkOverlap
     });
 
     const splitDocuments = await splitter.createDocuments([text]);
+
 
     const vectorstore = await SupabaseVectorStore.fromDocuments(
       splitDocuments,

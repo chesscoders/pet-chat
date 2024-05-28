@@ -4,5 +4,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 module.exports = withBundleAnalyzer({
   env: {
     API_BASE_URL: process.env.API_BASE_URL,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_PRIVATE_KEY: process.env.SUPABASE_PRIVATE_KEY,
   },
 });

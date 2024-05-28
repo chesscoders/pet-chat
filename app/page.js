@@ -14,6 +14,7 @@ const Page = () => {
       titleText="Pet Chat"
       placeholder="Iti pot raspunde la intrebari legate de animalutele tale! 🐶🐱🐦"
       emptyStateComponent={InfoCard}
+      showIngestForm
     />
   );
 };

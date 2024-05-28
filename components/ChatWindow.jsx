@@ -15,7 +15,6 @@ export function ChatWindow(props) {
 
   const {
     endpoint,
-    emptyStateComponent,
     placeholder,
     titleText = "An LLM",
     showIngestForm,
@@ -26,9 +25,7 @@ export function ChatWindow(props) {
   const [showIntermediateSteps, setShowIntermediateSteps] = useState(false);
   const [intermediateStepsLoading, setIntermediateStepsLoading] =
     useState(false);
-  const ingestForm = showIngestForm && (
-    <UploadDocumentsForm></UploadDocumentsForm>
-  );
+  const ingestForm = showIngestForm && <UploadDocumentsForm />;
   const intemediateStepsToggle = showIntermediateStepsToggle && (
     <div>
       <input
