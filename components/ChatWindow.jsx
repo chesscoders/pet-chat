@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -21,6 +21,7 @@ export function ChatWindow(props) {
     showIngestForm,
     showIntermediateStepsToggle,
     emoji,
+    welcomeMessageContent,
   } = props;
 
   const [showIntermediateSteps, setShowIntermediateSteps] = useState(false);
@@ -74,8 +75,7 @@ export function ChatWindow(props) {
 
   const welcomeMessage = {
     id: "0",
-    content:
-      "Salut! Ma bucur să te cunosc. Sunt aici pentru a te ajuta cu nevoile tale veterinare. Poți să îmi spui mai multe despre animalul tău de companie? Începem cu specia - este un câine, o pisică, un iepure sau altceva?",
+    content: welcomeMessageContent,
     role: "assistant",
   };
 
@@ -164,7 +164,6 @@ export function ChatWindow(props) {
       >
         {messages.length > 0
           ? [...messages].reverse().map((m, i) => {
-              console.log(m);
               const sourceKey = (messages.length - 1 - i).toString();
               return m.role === "system" ? (
                 <IntermediateStep key={m.id} message={m}></IntermediateStep>
@@ -178,7 +177,7 @@ export function ChatWindow(props) {
               );
             })
           : ""}
-        <ChatMessageBubble key={generateHash()} message={welcomeMessage} />
+        {<ChatMessageBubble key={generateHash()} message={welcomeMessage} />}
       </div>
 
       {messages.length === 0 && ingestForm}

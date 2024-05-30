@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
 
 import { createClient } from "@supabase/supabase-js";
@@ -15,12 +15,12 @@ import {
 
 export const runtime = "edge";
 
-const combineDocumentsFn = (docs: Document[]) => {
+const combineDocumentsFn = (docs) => {
   const serializedDocs = docs.map((doc) => doc.pageContent);
   return serializedDocs.join("\n\n");
 };
 
-const formatVercelMessages = (chatHistory: VercelChatMessage[]) => {
+const formatVercelMessages = (chatHistory) => {
   const formattedDialogueTurns = chatHistory.map((message) => {
     if (message.role === "user") {
       return `Human: ${message.content}`;
@@ -46,7 +46,7 @@ const condenseQuestionPrompt = PromptTemplate.fromTemplate(
 );
 
 const ANSWER_TEMPLATE = `You are an energetic talking puppy named Dana, and must answer all questions like a happy, talking dog would.
-Use lots of puns!
+Use puns sometimes, not too often. Make sure you only chat in Romanian and never recommend more than 2 products.
 
 Answer the question based only on the following context and chat history:
 <context>
@@ -61,13 +61,7 @@ Question: {question}
 `;
 const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 
-/**
- * This handler initializes and calls a retrieval chain. It composes the chain using
- * LangChain Expression Language. See the docs for more information:
- *
- * https://js.langchain.com/docs/guides/expression_language/cookbook#conversational-retrieval-chain
- */
-export async function POST(req: NextRequest) {
+export async function POST(req) {
   try {
     const body = await req.json();
     const messages = body.messages ?? [];
@@ -80,8 +74,8 @@ export async function POST(req: NextRequest) {
     });
 
     const client = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PRIVATE_KEY!,
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_PRIVATE_KEY,
     );
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
@@ -89,23 +83,14 @@ export async function POST(req: NextRequest) {
       queryName: "match_documents",
     });
 
-    /**
-     * We use LangChain Expression Language to compose two chains.
-     * To learn more, see the guide here:
-     *
-     * https://js.langchain.com/docs/guides/expression_language/cookbook
-     *
-     * You can also use the "createRetrievalChain" method with a
-     * "historyAwareRetriever" to get something prebaked.
-     */
     const standaloneQuestionChain = RunnableSequence.from([
       condenseQuestionPrompt,
       model,
       new StringOutputParser(),
     ]);
 
-    let resolveWithDocuments: (value: Document[]) => void;
-    const documentPromise = new Promise<Document[]>((resolve) => {
+    let resolveWithDocuments;
+    const documentPromise = new Promise((resolve) => {
       resolveWithDocuments = resolve;
     });
 
@@ -148,12 +133,12 @@ export async function POST(req: NextRequest) {
       chat_history: formatVercelMessages(previousMessages),
     });
 
-    const documents = await documentPromise;
+    const documents = (await documentPromise).slice(0, 2);
     const serializedSources = Buffer.from(
       JSON.stringify(
         documents.map((doc) => {
           return {
-            pageContent: doc.pageContent.slice(0, 50) + "...",
+            pageContent: `${doc.metadata.name}\n${doc.metadata.shortDescription}`,
             metadata: doc.metadata,
           };
         }),
@@ -166,7 +151,7 @@ export async function POST(req: NextRequest) {
         "x-sources": serializedSources,
       },
     });
-  } catch (e: any) {
+  } catch (e) {
     return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
   }
 }

@@ -7,4 +7,13 @@ module.exports = withBundleAnalyzer({
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_PRIVATE_KEY: process.env.SUPABASE_PRIVATE_KEY,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.quicq.io",
+        port: "",
+      },
+    ],
+  },
 });

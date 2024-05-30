@@ -102,12 +102,12 @@ export default function AgentsPage() {
     <ChatWindow
       endpoint="api/chat/retrieval"
       emptyStateComponent={InfoCard}
-      showIngestForm={true}
       placeholder={
-        'I\'ve got a nose for finding the right documents! Ask, "What is a document loader?"'
+        'Întreabă-mă ceva despre produsele veterinare pentru animalele de companie! 🐾'
       }
       emoji="🐶"
-      titleText="Dana the Document-Retrieving Dog"
+      titleText="Marta Vorbareata"
+      welcomeMessageContent="Salut! Ma bucur să te cunosc. Sunt aici pentru a te ajuta cu nevoile tale veterinare. Dacă ai nevoie de recomandări privind produsele veterinare pentru animalul tău de companie, sunt aici să te ghidez."
     ></ChatWindow>
   );
 }
