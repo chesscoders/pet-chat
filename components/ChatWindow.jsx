@@ -9,10 +9,13 @@ import ChatMessageBubble from "@/components/ChatMessageBubble";
 import { UploadDocumentsForm } from "@/components/UploadDocumentsForm";
 import { IntermediateStep } from "./IntermediateStep";
 
-import { generateHash } from "@/functions";
+import { generateHash, removeDiacritics } from "@/functions";
+import { COOKIE_NAME } from "@/constants/cookie";
+import { getPetDetails } from "@/lib";
 
 export function ChatWindow(props) {
   const messageContainerRef = useRef(null);
+  const [isConversationOver, setIsConversationOver] = useState(false);
 
   const {
     endpoint,
@@ -43,6 +46,8 @@ export function ChatWindow(props) {
 
   const [sourcesForMessages, setSourcesForMessages] = useState({});
 
+  const petDetails = removeDiacritics(getPetDetails());
+
   const {
     messages,
     input,
@@ -53,6 +58,9 @@ export function ChatWindow(props) {
     setMessages,
   } = useChat({
     api: endpoint,
+    body: {
+      petDetails,
+    },
     onResponse(response) {
       const sourcesHeader = response.headers.get("x-sources");
       const sources = sourcesHeader
@@ -173,6 +181,7 @@ export function ChatWindow(props) {
                   message={m}
                   aiEmoji={emoji}
                   sources={sourcesForMessages[sourceKey]}
+                  setIsConversationOver={setIsConversationOver}
                 ></ChatMessageBubble>
               );
             })
@@ -190,10 +199,12 @@ export function ChatWindow(props) {
             value={input}
             placeholder={placeholder ?? "What's it like to be a pirate?"}
             onChange={handleInputChange}
+            disabled={isConversationOver}
           />
           <button
             type="submit"
             className="shrink-0 px-8 py-4 bg-sky-600 rounded w-28"
+            disabled={isConversationOver}
           >
             <div
               role="status"

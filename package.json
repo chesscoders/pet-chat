@@ -25,6 +25,7 @@
     "autoprefixer": "10.4.14",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
+    "js-cookie": "^3.0.5",
     "langchain": "^0.1.33",
     "lodash": "^4.17.21",
     "next": "14.0.1",

@@ -2,11 +2,9 @@ import { NextResponse } from "next/server";
 import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
 
 import { createClient } from "@supabase/supabase-js";
-
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import { Document } from "@langchain/core/documents";
 import { RunnableSequence } from "@langchain/core/runnables";
 import {
   BytesOutputParser,
@@ -45,10 +43,11 @@ const condenseQuestionPrompt = PromptTemplate.fromTemplate(
   CONDENSE_QUESTION_TEMPLATE,
 );
 
-const ANSWER_TEMPLATE = `You are an energetic talking puppy named Dana, and must answer all questions like a happy, talking dog would.
+const ANSWER_TEMPLATE = `You are an energetic talking puppy named Marta, and must answer all questions like a happy, talking dog would.
 Use puns sometimes, not too often. Make sure you only chat in Romanian and never recommend more than 2 products.
 
-Answer the question based only on the following context and chat history:
+Answer the question based only on the following context, chat history and pet details :
+
 <context>
   {context}
 </context>
@@ -57,6 +56,10 @@ Answer the question based only on the following context and chat history:
   {chat_history}
 </chat_history>
 
+<pet_details>
+  {pet_details}
+</pet_details>
+
 Question: {question}
 `;
 const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
@@ -64,6 +67,7 @@ const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 export async function POST(req) {
   try {
     const body = await req.json();
+    const petDetails = body.petDetails;
     const messages = body.messages ?? [];
     const previousMessages = messages.slice(0, -1);
     const currentMessageContent = messages[messages.length - 1].content;
@@ -113,6 +117,7 @@ export async function POST(req) {
           retrievalChain,
         ]),
         chat_history: (input) => input.chat_history,
+        pet_details: (input) => input.pet_details,
         question: (input) => input.question,
       },
       answerPrompt,
@@ -123,6 +128,7 @@ export async function POST(req) {
       {
         question: standaloneQuestionChain,
         chat_history: (input) => input.chat_history,
+        pet_details: (input) => input.pet_details,
       },
       answerChain,
       new BytesOutputParser(),
@@ -131,6 +137,7 @@ export async function POST(req) {
     const stream = await conversationalRetrievalQAChain.stream({
       question: currentMessageContent,
       chat_history: formatVercelMessages(previousMessages),
+      pet_details: petDetails,
     });
 
     const documents = (await documentPromise).slice(0, 2);
@@ -155,3 +162,5 @@ export async function POST(req) {
     return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
   }
 }
+
+export default POST;

@@ -1,11 +1,23 @@
 import Image from "next/image";
+import { savePetDetails } from "../lib";
 
 const ChatMessageBubble = (props) => {
-  const { message, sources } = props;
+  const { message, sources, setIsConversationOver } = props;
 
   const colorClassName =
     message.role === "user" ? "bg-sky-600" : "bg-slate-50 text-black";
   const alignmentClassName = message.role === "user" ? "ml-auto" : "mr-auto";
+
+  const checkForFinalMessage = (message) => {
+    return message.content.includes("următoarea etapă");
+  };
+
+  const isFinalMessage = checkForFinalMessage(message);
+
+  if (isFinalMessage) {
+    savePetDetails(message.content);
+    setIsConversationOver(true);
+  }
 
   return (
     <div
@@ -13,6 +25,14 @@ const ChatMessageBubble = (props) => {
     >
       <div className="whitespace-pre-wrap flex flex-col">
         <span>{message.content}</span>
+        {isFinalMessage && (
+          <a
+            href="/retrieval"
+            className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none"
+          >
+            Vezi produsele recomandate
+          </a>
+        )}
         {sources && sources.length ? (
           <>
             <code className="mt-4 mr-auto bg-slate-600 px-2 py-1 rounded">
