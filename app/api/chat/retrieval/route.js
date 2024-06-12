@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
+import { StreamingTextResponse } from "ai";
 
 import { createClient } from "@supabase/supabase-js";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
@@ -31,26 +31,7 @@ const formatVercelMessages = (chatHistory) => {
   return formattedDialogueTurns.join("\n");
 };
 
-const CONDENSE_QUESTION_TEMPLATE = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
-
-<chat_history>
-  {chat_history}
-</chat_history>
-
-Follow Up Input: {question}
-Standalone question:`;
-const condenseQuestionPrompt = PromptTemplate.fromTemplate(
-  CONDENSE_QUESTION_TEMPLATE,
-);
-
-const ANSWER_TEMPLATE = `You are an energetic talking puppy named Marta, and must answer all questions like a happy, talking dog would.
-Use puns sometimes, not too often. Make sure you only chat in Romanian and never recommend more than 2 products.
-
-Answer the question based only on the following context, chat history and pet details :
-
-<context>
-  {context}
-</context>
+const CONDENSE_QUESTION_TEMPLATE = `Având în vedere următoarea conversație, detaliile despre animalul de companie și o întrebare ulterioară, reformulează întrebarea ulterioară pentru a fi o întrebare independentă în română.
 
 <chat_history>
   {chat_history}
@@ -60,7 +41,37 @@ Answer the question based only on the following context, chat history and pet de
   {pet_details}
 </pet_details>
 
-Question: {question}
+Întrebare ulterioară: {question}`;
+
+const condenseQuestionPrompt = PromptTemplate.fromTemplate(
+  CONDENSE_QUESTION_TEMPLATE,
+);
+
+const ANSWER_TEMPLATE = `Ești un cățeluș energic pe nume Marta și trebuie să răspunzi la toate întrebările în română ca un câine fericit care vorbește. Folosește jocuri de cuvinte uneori, dar nu prea des. Asigură-te că răspunzi doar în română și nu recomanzi mai mult de 2 produse.
+
+Răspunde la întrebare bazându-te doar pe următorul context, istoric al conversației și detalii despre animalul de companie:
+
+<context>
+  {context}
+</context>
+<chat_history>
+{chat_history}
+</chat_history>
+
+<pet_details>
+  {pet_details}
+</pet_details>
+
+Instrucțiuni suplimentare:
+
+- Nu recomanda produse pentru pui dacă vârsta este peste 12 luni.
+- Recomandă produse pentru pui dacă vârsta este sub 12 luni.
+- Nu recomanda produse care conțin cuvântul "adult" în titlu dacă vârsta este sub 12 luni.
+- Menționează doar produsele relevante pentru specia, rasa, vârsta, sexul și problemele de sănătate menționate în detaliile despre animalul de companie.
+- Nu face recomandări dacă nu ai suficiente informații.
+- Răspunde întotdeauna în română.
+
+Întrebare: {question}
 `;
 const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 
@@ -73,7 +84,7 @@ export async function POST(req) {
     const currentMessageContent = messages[messages.length - 1].content;
 
     const model = new ChatOpenAI({
-      modelName: "gpt-3.5-turbo-1106",
+      modelName: "gpt-4o",
       temperature: 0.2,
     });
 
@@ -99,9 +110,11 @@ export async function POST(req) {
     });
 
     const retriever = vectorstore.asRetriever({
+      k: 2,
       callbacks: [
         {
           handleRetrieverEnd(documents) {
+            console.log("Retrieved documents length: ", documents.length);
             resolveWithDocuments(documents);
           },
         },
@@ -140,7 +153,8 @@ export async function POST(req) {
       pet_details: petDetails,
     });
 
-    const documents = (await documentPromise).slice(0, 2);
+    const documents = await documentPromise;
+
     const serializedSources = Buffer.from(
       JSON.stringify(
         documents.map((doc) => {
