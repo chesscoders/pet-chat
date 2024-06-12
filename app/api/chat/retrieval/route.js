@@ -114,7 +114,6 @@ export async function POST(req) {
       callbacks: [
         {
           handleRetrieverEnd(documents) {
-            console.log("Retrieved documents length: ", documents.length);
             resolveWithDocuments(documents);
           },
         },
