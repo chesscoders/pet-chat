@@ -98,12 +98,13 @@ export default function AgentsPage() {
       </ul>
     </div>
   );
+
   return (
     <ChatWindow
       endpoint="api/chat/retrieval"
       emptyStateComponent={InfoCard}
       placeholder={
-        'Întreabă-mă ceva despre produsele veterinare pentru animalele de companie! 🐾'
+        "Întreabă-mă ceva despre produsele veterinare pentru animalele de companie! 🐾"
       }
       emoji="🐶"
       titleText="Marta Vorbareata"
