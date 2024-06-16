@@ -51,11 +51,8 @@ export async function POST(req) {
 
     const model = new ChatOpenAI({
       modelName: "gpt-4o",
-      temperature: 0.2,
+      temperature: 0,
     });
-
-    // const petNeeds = await determinePetNeeds(petDetails);
-    // console.log("petNeeds: ", petNeeds);
 
     const client = createClient(
       process.env.SUPABASE_URL,
