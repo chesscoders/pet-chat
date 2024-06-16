@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { savePetDetails } from "../lib";
 import { useState } from "react";
+import Markdown from 'react-markdown'
 
 const ChatMessageBubble = (props) => {
   const { message, sources, setIsConversationOver } = props;
@@ -25,8 +26,8 @@ const ChatMessageBubble = (props) => {
     <div
       className={`${alignmentClassName} ${colorClassName} rounded px-4 py-2 max-w-[80%] mb-8 flex`}
     >
-      <div className="whitespace-pre-wrap flex flex-col">
-        <span className='cursor-pointer' onClick={(() => setShowSources(prev => !prev))}>{message.content}</span>
+      <div className="flex flex-col">
+        <div onClick={(() => setShowSources(prev => !prev))}><Markdown className='cursor-pointer'>{message.content}</Markdown></div>
         {isFinalMessage && (
           <a
             href="/retrieval"
