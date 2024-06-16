@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { savePetDetails } from "../lib";
+import { useState } from "react";
 
 const ChatMessageBubble = (props) => {
   const { message, sources, setIsConversationOver } = props;
-
+  const [showSources, setShowSources] = useState(false);
+  
   const colorClassName =
     message.role === "user" ? "bg-sky-600" : "bg-slate-50 text-black";
   const alignmentClassName = message.role === "user" ? "ml-auto" : "mr-auto";
@@ -24,7 +26,7 @@ const ChatMessageBubble = (props) => {
       className={`${alignmentClassName} ${colorClassName} rounded px-4 py-2 max-w-[80%] mb-8 flex`}
     >
       <div className="whitespace-pre-wrap flex flex-col">
-        <span>{message.content}</span>
+        <span className='cursor-pointer' onClick={(() => setShowSources(prev => !prev))}>{message.content}</span>
         {isFinalMessage && (
           <a
             href="/retrieval"
@@ -33,7 +35,8 @@ const ChatMessageBubble = (props) => {
             Vezi produsele recomandate
           </a>
         )}
-        {sources && sources.length ? (
+        {/* {sources && sources.length ? ( */}
+        {sources && sources.length && showSources ? (
           <>
             <code className="mt-4 mr-auto bg-slate-600 px-2 py-1 rounded">
               <h2>🔍 Surse:</h2>
