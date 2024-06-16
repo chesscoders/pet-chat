@@ -108,7 +108,7 @@ export default function AgentsPage() {
       }
       emoji="🐶"
       titleText="Marta Vorbareata"
-      welcomeMessageContent="Salut! Ma bucur să te cunosc. Sunt aici pentru a te ajuta cu nevoile tale veterinare. Dacă ai nevoie de recomandări privind produsele veterinare pentru animalul tău de companie, sunt aici să te ghidez."
+      welcomeMessageContent="Salut! Sunt aici pentru a te ajuta cu nevoile tale veterinare. Dacă ai nevoie de recomandări privind produsele veterinare pentru animalul tău de companie, sunt aici să te ghidez."
     ></ChatWindow>
   );
 }
