@@ -42,7 +42,7 @@ const ChatMessageBubble = (props) => {
             <code className="mt-4 mr-auto bg-slate-600 px-2 py-1 rounded">
               <h2>🔍 Surse:</h2>
             </code>
-            <code className="mt-1 mr-2 bg-slate-600 px-2 py-1 rounded text-xs">
+            <code className="mt-1 mr-2 bg-slate-600 px-2 py-1 rounded text-xs flex gap-8">
               {sources.map((source, i) => (
                 <div className="mt-2" key={"source:" + i}>
                   {(function () {
@@ -75,8 +75,8 @@ const ChatMessageBubble = (props) => {
                   <Image
                     src={source.metadata?.image}
                     alt="image"
-                    width={400}
-                    height={400}
+                    width={250}
+                    height={250}
                   />
                 </div>
               ))}
