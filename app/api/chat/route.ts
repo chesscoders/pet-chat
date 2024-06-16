@@ -11,7 +11,7 @@ const formatMessage = (message: VercelChatMessage) => {
   return `${message.role}: ${message.content}`;
 };
 
-const TEMPLATE = `You are a animal expert and you are chatting with a user about pets and potential recomendations for said the user's pets. You must answer in Romanian
+const TEMPLATE = `You are an animal expert and you are chatting with the user regarding pets and potential product recomendations for the user's pets. You must answer in Romanian
 
 Current conversation:
 {chat_history}
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
      */
     const model = new ChatOpenAI({
       temperature: 0.8,
-      modelName: "gpt-3.5-turbo-1106",
+      modelName: "gpt-4o",
     });
 
     /**
