@@ -103,11 +103,8 @@ export default function AgentsPage() {
     <ChatWindow
       endpoint="api/chat/retrieval"
       emptyStateComponent={InfoCard}
-      placeholder={
-        "Întreabă-mă ceva despre produsele veterinare pentru animalele de companie! 🐾"
-      }
-      emoji="🐶"
-      titleText="Marta Vorbareata"
+      placeholder={"Iti pot sugera produse pentru animalul tau de companie! 🐾"}
+      titleText="Pet Chat"
       welcomeMessageContent="Salut! Sunt aici pentru a te ajuta cu nevoile tale veterinare. Dacă ai nevoie de recomandări privind produsele veterinare pentru animalul tău de companie, sunt aici să te ghidez."
     ></ChatWindow>
   );
