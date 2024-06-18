@@ -10,7 +10,7 @@ const CONDENSE_QUESTION_TEMPLATE = `Având în vedere următoarea conversație, 
 
 Întrebare ulterioară: {question}`;
 
-const ANSWER_TEMPLATE = `Ești un asistent folositor și energic și trebuie să răspunzi la toate întrebările în legătură cu diverse produse veterinare în limba română. Folosește jocuri de cuvinte uneori, dar nu prea des. Asigură-te că răspunzi doar în română și nu recomanzi mai mult de 3 produse.
+const ANSWER_TEMPLATE = `Ești un asistent folositor și energic și trebuie să răspunzi la toate întrebările în legătură cu diverse produse veterinare în limba română. Folosește jocuri de cuvinte uneori, dar nu prea des. Asigură-te că răspunzi doar în română și că recomanzi 3 produse.Recomandările trebuie să fie în ordine alfabetică.
 
 Răspunde la întrebare bazându-te doar pe următorul context, istoric al conversației și detalii despre animalul de companie:
 

@@ -77,7 +77,7 @@ export async function POST(req) {
     });
 
     const retriever = vectorstore.asRetriever({
-      k: 2,
+      k: 3,
       callbacks: [
         {
           handleRetrieverEnd(documents) {
@@ -113,17 +113,27 @@ export async function POST(req) {
       new BytesOutputParser(),
     ]);
 
-    const stream = await conversationalRetrievalQAChain.stream({
+    // Start both the stream and the document retrieval.
+    const streamPromise = conversationalRetrievalQAChain.stream({
       question: currentMessageContent,
       chat_history: formatVercelMessages(previousMessages),
       pet_details: petDetails,
     });
 
-    const documents = await documentPromise;
+    // Wait for both to complete.
+    const [stream, documents] = await Promise.all([
+      streamPromise,
+      documentPromise,
+    ]);
+
+    // Sort the documents based on metadata.name.
+    const sortedDocuments = documents.sort((a, b) =>
+      a.metadata.name.localeCompare(b.metadata.name),
+    );  
 
     const serializedSources = Buffer.from(
       JSON.stringify(
-        documents.map((doc) => {
+        sortedDocuments.map((doc) => {
           return {
             pageContent: `${doc.metadata.name}\n${doc.metadata.shortDescription}`,
             metadata: doc.metadata,
