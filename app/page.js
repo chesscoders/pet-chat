@@ -10,7 +10,7 @@ const Page = () => {
 
   return (
     <ChatWindow
-      endpoint={`${process.env.API_BASE_URL}/chat`}
+      endpoint="api/chat"
       titleText="Pet Chat"
       placeholder="Spune-mi despre animalutul tau de companie! 🐶🐱🐦"
       emptyStateComponent={InfoCard}

@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/ChatMessageBubble.jsx", "app/page.js", "app/api/chat/retrieval/route.js", "app/retrieval/page.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/ChatMessageBubble.jsx", "app/page.js", "app/api/chat/retrieval/route.js", "app/retrieval/page.js", "app/api/chat/route.js"],
   "exclude": ["node_modules"]
 }
