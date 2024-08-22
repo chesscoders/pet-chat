@@ -14,7 +14,7 @@ const Page = () => {
       titleText="Pet Chat"
       placeholder="Spune-mi despre animalutul tau de companie! 🐶🐱🐦"
       emptyStateComponent={InfoCard}
-      welcomeMessageContent="Salut! Sunt aici pentru a te ajuta cu nevoile tale veterinare. Poți să îmi spui mai multe despre animalul tău de companie? Începem cu specia - este un câine, o pisică, un iepure sau altceva?"
+      welcomeMessageContent="Salutare! 👋"
     />
   );
 };

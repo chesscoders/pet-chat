@@ -195,7 +195,7 @@ export function ChatWindow(props) {
         <div className="flex">{intemediateStepsToggle}</div>
         <div className="flex w-full mt-4">
           <input
-            className="grow mr-8 p-4 rounded"
+            className="grow mr-2 md:mr-8 p-4 rounded"
             value={input}
             placeholder={placeholder ?? "What's it like to be a pirate?"}
             onChange={handleInputChange}
@@ -203,7 +203,7 @@ export function ChatWindow(props) {
           />
           <button
             type="submit"
-            className="shrink-0 px-8 py-4 bg-sky-600 rounded w-28"
+            className="shrink-0 px-2 md:px-8 py-4 bg-sky-600 rounded w-12 md:w-28"
             disabled={isConversationOver}
           >
             <div
@@ -230,7 +230,7 @@ export function ChatWindow(props) {
                   fill="currentFill"
                 />
               </svg>
-              <span className="sr-only">Loading...</span>
+              <span className="hidden md:inline sr-only">Loading...</span>
             </div>
             <span
               className={
@@ -239,7 +239,8 @@ export function ChatWindow(props) {
                   : ""
               }
             >
-              Trimite
+              <span className="hidden md:inline">Trimite</span>
+              <span className="inline font-bold md:hidden">{">"}</span>
             </span>
           </button>
         </div>
